@@ -57,3 +57,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
+    class Meta:
+        permissions = [
+            ("can_manage_all", "Can manage all"),
+        ]
+
+
+class Police(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='police_profile')
+    plate_num = models.CharField(max_length=20)

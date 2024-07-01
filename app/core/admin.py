@@ -3,44 +3,41 @@ Django admin customization.
 """
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.utils.translation import gettext_lazy as _
+from .models import User, Police
+from .forms import CustomUserCreationForm, CustomUserChangeForm, PoliceCreationForm, PoliceChangeForm
 
-from core import models
 
-
-class UserAdmin(BaseUserAdmin):
-    """Define the admin pages for users."""
-    ordering = ['id']
-    list_display = ['email', 'name']
+class CustomUserAdmin(BaseUserAdmin):
+    add_form = CustomUserCreationForm
+    form = CustomUserChangeForm
+    model = User
+    list_display = ('email', 'name', 'role', 'is_staff', 'is_active')
+    list_filter = ('role', 'is_staff', 'is_superuser', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (
-            _('Permissions'),
-            {
-                'fields': (
-                    'is_active',
-                    'is_staff',
-                    'is_superuser',
-                )
-            }
-        ),
-        (_('Important dates'), {'fields': ('last_login',)})
+        ('Personal Info', {'fields': ('name',)}),
+        ('Permissions', {'fields': ('is_staff', 'is_active',
+         'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login',)}),
+        ('Role', {'fields': ('role',)}),
     )
-    readonly_fields = ['last_login']
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': (
-                'email',
-                'password1',
-                'password2',
-                'name',
-                'is_active',
-                'is_staff',
-                'is_superuser',
-            )
-        }),
+            'fields': ('email', 'name', 'password1', 'password2', 'role', 'is_staff', 'is_active')}
+         ),
     )
+    search_fields = ('email', 'name')
+    ordering = ('email',)
 
 
-admin.site.register(models.User, UserAdmin)
+class PoliceAdmin(admin.ModelAdmin):
+    add_form = PoliceCreationForm
+    form = PoliceChangeForm
+    model = Police
+    list_display = ('user', 'plate_num')
+    search_fields = ('user__email', 'plate_num')
+
+
+admin.site.register(User, CustomUserAdmin)
+admin.site.register(Police, PoliceAdmin)
