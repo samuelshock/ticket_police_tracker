@@ -68,3 +68,20 @@ class Police(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='police_profile')
     plate_num = models.CharField(max_length=20)
+
+
+class Vehicle(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='autos')
+    license_plate = models.CharField(max_length=20)
+    brand = models.CharField(max_length=50)
+    color = models.CharField(max_length=30)
+
+
+class Ticket(models.Model):
+    police = models.ForeignKey(
+        Police, on_delete=models.CASCADE, related_name='infracciones')
+    car = models.ForeignKey(
+        Vehicle, on_delete=models.CASCADE, related_name='infracciones')
+    description = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)

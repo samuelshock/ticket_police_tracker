@@ -3,7 +3,7 @@ Custom forms for models
 """
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Police
+from .models import User, Police, Vehicle
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -28,3 +28,15 @@ class PoliceChangeForm(forms.ModelForm):
     class Meta:
         model = Police
         fields = ('user', 'plate_num')
+
+
+class VehicleCreationForm(forms.ModelForm):
+    class Meta:
+        model = Vehicle
+        fields = ('user', 'license_plate', 'brand', 'color')
+
+
+class VehicleChangeForm(forms.ModelForm):
+    class Meta:
+        model = Vehicle
+        fields = ('user', 'license_plate', 'brand', 'color')

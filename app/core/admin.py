@@ -3,8 +3,15 @@ Django admin customization.
 """
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Police
-from .forms import CustomUserCreationForm, CustomUserChangeForm, PoliceCreationForm, PoliceChangeForm
+from .models import Ticket, User, Police, Vehicle
+from .forms import (
+    CustomUserCreationForm,
+    CustomUserChangeForm,
+    PoliceCreationForm,
+    PoliceChangeForm,
+    VehicleChangeForm,
+    VehicleCreationForm,
+)
 
 
 class CustomUserAdmin(BaseUserAdmin):
@@ -39,5 +46,23 @@ class PoliceAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'plate_num')
 
 
+class VehicleAdmin(admin.ModelAdmin):
+    add_form = VehicleCreationForm
+    form = VehicleChangeForm
+    model = Vehicle
+    list_display = ('license_plate', 'brand', 'color', 'user')
+    search_fields = ('license_plate', 'brand', 'color', 'user__name')
+    list_filter = ('brand', 'color')
+
+
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ('description', 'police', 'car', 'date')
+    search_fields = ('description', 'police__user__name', 'car__license_plate')
+    list_filter = ('date', 'police', 'car')
+    ordering = ('-date',)
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Police, PoliceAdmin)
+admin.site.register(Vehicle, VehicleAdmin)
+admin.site.register(Ticket, TicketAdmin)
