@@ -3,6 +3,7 @@ Tests for the Django models modifications.
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from ..models import Police, User, Vehicle, Ticket
 
 
 USER_ROLES = (
@@ -17,9 +18,15 @@ def create_user(email='user@example.com', password='testpass123'):
     return get_user_model().objects.create_user(email, password)
 
 
-def create_police(email='user@example.com', password='testpass123'):
+def create_police(email='police@example.com', password='testpolicepass123'):
     """Create and return a new police user."""
-    return get_user_model().objects.create_user(email, password, role='police')
+    police_user = get_user_model().objects.create_user(email, password, role='police')
+    return Police.objects.create(user=police_user, plate_num='ABC123')
+
+
+def create_vehicle(user, license_plate='123QWE', brand='Honda', color='black'):
+    """Create and return a new vehicle."""
+    return Vehicle.objects.create(user=user, license_plate=license_plate, brand=brand, color=color)
 
 
 class ModelTests(TestCase):
@@ -29,7 +36,7 @@ class ModelTests(TestCase):
         """Test creating a user with an email is successful."""
         email = 'test@example.com'
         password = 'testpass123'
-        user = get_user_model().objects.create_user(
+        user = create_user(
             email=email,
             password=password,
         )
@@ -47,7 +54,7 @@ class ModelTests(TestCase):
             ['test4@example.Com', 'test4@example.com'],
         ]
         for email, expected in sample_emails:
-            user = get_user_model().objects.create_user(email, 'sample123')
+            user = create_user(email, 'sample123')
             self.assertEqual(user.email, expected)
 
     def test_new_user_without_email_raises_error(self):
@@ -75,3 +82,42 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_staff)
         self.assertEqual(user.role, USER_ROLES[2])
+
+
+class ModelTestsWithUser(TestCase):
+    """Test Models with users."""
+
+    def setUp(self) -> None:
+        """Create user and police."""
+        self.user = create_user()
+        self.police = create_police()
+        return super().setUp()
+
+    def test_create_vehicle(self):
+        """Test create a new vehicle."""
+        data = {
+            'user': self.user,
+            'license_plate': 'test123',
+            'brand': 'toyota',
+            'color': 'white'
+        }
+        vehicle = Vehicle.objects.create(**data)
+
+        self.assertEqual(vehicle.user.id, self.user.id)
+        self.assertEqual(vehicle.license_plate, data['license_plate'])
+        self.assertEqual(vehicle.brand, data['brand'])
+        self.assertEqual(vehicle.color, data['color'])
+
+    def test_create_ticket(self):
+        """Test create a new ticket"""
+        data = {
+            'police': self.police,
+            'car': create_vehicle(self.user),
+            'description': 'Test ticket'
+        }
+
+        ticket = Ticket.objects.create(**data)
+
+        self.assertEqual(ticket.police.id, data['police'].id)
+        self.assertEqual(ticket.car.id, data['car'].id)
+        self.assertEqual(ticket.description, data['description'])
