@@ -3,7 +3,7 @@ Tests for the Django models modifications.
 """
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from ..models import Police, User, Vehicle, Ticket
+from ..models import Police, Vehicle, Ticket
 
 
 USER_ROLES = (
@@ -20,13 +20,18 @@ def create_user(email='user@example.com', password='testpass123'):
 
 def create_police(email='police@example.com', password='testpolicepass123'):
     """Create and return a new police user."""
-    police_user = get_user_model().objects.create_user(email, password, role='police')
+    police_user = get_user_model().objects.create_user(
+        email, password, role='police')
     return Police.objects.create(user=police_user, plate_num='ABC123')
 
 
 def create_vehicle(user, license_plate='123QWE', brand='Honda', color='black'):
     """Create and return a new vehicle."""
-    return Vehicle.objects.create(user=user, license_plate=license_plate, brand=brand, color=color)
+    return Vehicle.objects.create(
+        user=user,
+        license_plate=license_plate,
+        brand=brand,
+        color=color)
 
 
 class ModelTests(TestCase):
