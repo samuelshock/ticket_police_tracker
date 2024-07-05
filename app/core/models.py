@@ -63,25 +63,42 @@ class User(AbstractBaseUser, PermissionsMixin):
             ("can_manage_all", "Can manage all"),
         ]
 
+    def __str__(self) -> str:
+        return self.email
+
 
 class Police(models.Model):
+    """
+    Police object in the app.
+    """
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='police_profile')
     plate_num = models.CharField(max_length=20)
 
+    def __str__(self) -> str:
+        return f'Nro: ({self.plate_num}) - {self.user.name}'
+
 
 class Vehicle(models.Model):
+    """Vehicle object in the app."""
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='vehicles')
-    license_plate = models.CharField(max_length=20)
+    license_plate = models.CharField(max_length=20, unique=True)
     brand = models.CharField(max_length=50)
     color = models.CharField(max_length=30)
 
+    def __str__(self) -> str:
+        return self.license_plate
+
 
 class Ticket(models.Model):
+    """Ticket object in the app."""
     police = models.ForeignKey(
-        Police, on_delete=models.CASCADE, related_name='infracciones')
+        Police, on_delete=models.CASCADE, related_name='tickets')
     car = models.ForeignKey(
-        Vehicle, on_delete=models.CASCADE, related_name='infracciones')
+        Vehicle, on_delete=models.CASCADE, related_name='tickets')
     description = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.car.license_plate} - {self.date}'
