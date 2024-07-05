@@ -33,10 +33,10 @@ class PoliceChangeForm(forms.ModelForm):
 class VehicleCreationForm(forms.ModelForm):
     class Meta:
         model = Vehicle
-        fields = ('user', 'license_plate', 'brand', 'color')
+        fields = ('owner', 'license_plate', 'brand', 'color')
 
 
 class VehicleChangeForm(forms.ModelForm):
     class Meta:
         model = Vehicle
-        fields = ('user', 'license_plate', 'brand', 'color')
+        fields = ('owner', 'license_plate', 'brand', 'color')

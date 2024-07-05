@@ -2,9 +2,10 @@
 Vehicles API urls.
 """
 from django.urls import path
-from vehicles.views import TicketCreateView
+from vehicles import views
 
 urlpatterns = [
     path('cargar_infraccion/',
-         TicketCreateView.as_view(), name='create-ticket'),
+         views.TicketCreateView.as_view(), name='create-ticket'),
+    path('generar_informe/', views.ReportTicketView.as_view(), name='ticket-report'),
 ]

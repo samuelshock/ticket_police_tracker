@@ -28,7 +28,7 @@ def create_police(email='police@example.com', password='testpolicepass123'):
 def create_vehicle(user, license_plate='123QWE', brand='Honda', color='black'):
     """Create and return a new vehicle."""
     return Vehicle.objects.create(
-        user=user,
+        owner=user,
         license_plate=license_plate,
         brand=brand,
         color=color)
@@ -101,14 +101,14 @@ class ModelTestsWithUser(TestCase):
     def test_create_vehicle(self):
         """Test create a new vehicle."""
         data = {
-            'user': self.user,
+            'owner': self.user,
             'license_plate': 'test123',
             'brand': 'toyota',
             'color': 'white'
         }
         vehicle = Vehicle.objects.create(**data)
 
-        self.assertEqual(vehicle.user.id, self.user.id)
+        self.assertEqual(vehicle.owner.id, self.user.id)
         self.assertEqual(vehicle.license_plate, data['license_plate'])
         self.assertEqual(vehicle.brand, data['brand'])
         self.assertEqual(vehicle.color, data['color'])

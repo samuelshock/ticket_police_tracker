@@ -71,8 +71,8 @@ class Police(models.Model):
 
 
 class Vehicle(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='autos')
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='vehicles')
     license_plate = models.CharField(max_length=20)
     brand = models.CharField(max_length=50)
     color = models.CharField(max_length=30)

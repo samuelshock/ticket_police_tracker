@@ -58,8 +58,8 @@ class VehicleAdmin(admin.ModelAdmin):
     add_form = VehicleCreationForm
     form = VehicleChangeForm
     model = Vehicle
-    list_display = ('license_plate', 'brand', 'color', 'user')
-    search_fields = ('license_plate', 'brand', 'color', 'user__name')
+    list_display = ('license_plate', 'brand', 'color', 'owner')
+    search_fields = ('license_plate', 'brand', 'color', 'owner__name')
     list_filter = ('brand', 'color')
 
 

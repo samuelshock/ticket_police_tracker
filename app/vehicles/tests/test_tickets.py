@@ -1,5 +1,5 @@
 """
-API tests.
+API Vehicles, tickets tests.
 """
 from django.test import TestCase
 from django.urls import reverse
@@ -28,7 +28,7 @@ class TicketCreateAPITest(TestCase):
             role='user'
         )
         self.vehicle = Vehicle.objects.create(
-            user=self.regular_user,
+            owner=self.regular_user,
             license_plate='ABC123',
             brand='Toyota',
             color='Rojo'
