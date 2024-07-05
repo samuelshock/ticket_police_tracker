@@ -34,7 +34,9 @@ class TicketCreateView(GenericAPIView):
                         'message': msg
                     },
                     status=status.HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReportTicketView(GenericAPIView):
@@ -44,12 +46,18 @@ class ReportTicketView(GenericAPIView):
     def get(self, request, *args, **kwargs):
         email = request.query_params.get('email', None)
         if email is None:
-            return Response({'message': 'Email parameter is required.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'message': 'Email parameter is required.'
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({'message': 'User with this email does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {
+                    'message': 'User with this email does not exist.'
+                }, status=status.HTTP_404_NOT_FOUND)
 
         tickets = Ticket.objects.filter(car__owner=user)
         serializer = ReportTicketSerializer(tickets, many=True)

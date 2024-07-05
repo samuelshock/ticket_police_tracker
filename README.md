@@ -4,13 +4,13 @@ Police ticket tracker API project
 
 ## creating a Django project
 
-runt the followed command:
+run the followed command:
 
 > docker-compose run --rm app sh -c "django-admin startproject app ."
 
 ## Applying Django migrations with command
 
-runt the followed command:
+run the followed command:
 
 > docker-compose run --rm app sh -c "python manage.py wait_for_db && python manage.py migrate"
 
